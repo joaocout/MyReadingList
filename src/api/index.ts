@@ -11,6 +11,7 @@ type SearchResponseItem = {
     imageLinks: {
       thumbnail: string;
     };
+    canonicalVolumeLink: string;
   };
 };
 
@@ -35,6 +36,7 @@ async function getBooks(query: string, page: number): Promise<GetBooksResult> {
         title: book.volumeInfo.title,
         authors: book.volumeInfo.authors?.join("\n"),
         thumb: book.volumeInfo.imageLinks?.thumbnail,
+        link: book.volumeInfo.canonicalVolumeLink,
       })
     );
     return {

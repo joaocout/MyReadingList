@@ -47,6 +47,27 @@ export const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: "row",
     marginTop: 10,
-    justifyContent: "space-evenly",
+    justifyContent: "space-around",
+  },
+
+  moveBookButtonsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  moveBookButton: {
+    margin: 5,
+  },
+
+  progressButtonContainer: {
+    flexShrink: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    margin: 5,
+  },
+
+  progressButtonText: {
+    color: COLORS.ACCENT,
+    fontSize: 12,
   },
 });

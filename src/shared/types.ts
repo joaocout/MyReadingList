@@ -4,6 +4,7 @@ export type SearchItem = {
   title: string;
   authors: string;
   thumb: string;
+  link: string;
 };
 
 export type BookshelfItem = {
@@ -11,5 +12,6 @@ export type BookshelfItem = {
   title: string;
   authors: string;
   thumb: string;
+  link: string;
   progress: "completed" | "reading" | "new";
 };

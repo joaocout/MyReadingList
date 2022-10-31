@@ -117,6 +117,7 @@ export default function Catalog() {
             thumb: item.thumb,
             authors: item.authors,
             progress: "new",
+            link: item.link,
           })
         );
       }}
