@@ -41,7 +41,7 @@ export default function BookshelfBookCard({
       style={[
         styles.container,
         // when the book is marked as finished, its card will appear faded
-        book.progress === "completed" ? { opacity: 0.5 } : null,
+        book.progress === "completed" ? { opacity: 0.3 } : null,
       ]}
     >
       <View style={styles.bookInfoContainer}>

@@ -14,6 +14,12 @@ const bookshelfSlice = createSlice({
   name: "bookShelf",
   initialState,
   reducers: {
+    retrieveBooks: (
+      state: bookshelfSliceState,
+      action: PayloadAction<BookshelfItem[]>
+    ) => {
+      state.books = action.payload;
+    },
     add: (state: bookshelfSliceState, action: PayloadAction<BookshelfItem>) => {
       // index of the book to move
       const index = state.books.findIndex(({ id }) => id === action.payload.id);
@@ -69,7 +75,7 @@ const bookshelfSlice = createSlice({
   },
 });
 
-export const { add, remove, moveUp, moveDown, changeProgress } =
+export const { add, remove, moveUp, moveDown, changeProgress, retrieveBooks } =
   bookshelfSlice.actions;
 
 const bookshelfReducer = bookshelfSlice.reducer;

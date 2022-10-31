@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, FlatList, ListRenderItem, Alert } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 
 import { selectBooks } from "../../redux/store";
@@ -9,6 +10,7 @@ import {
   moveDown,
   moveUp,
   changeProgress,
+  retrieveBooks,
 } from "../../redux/slices/bookshelfSlice";
 
 import BookshelfBookCard from "../../components/BookshelfBookCard";
@@ -21,7 +23,35 @@ export default function Bookshelf() {
   const bookShelfBooks = useSelector(selectBooks);
   const dispatch = useDispatch();
 
-  useEffect(() => {}, []);
+  const [loading, setLoading] = useState(true);
+
+  // when we update the redux state, we also want to update the localstorage
+  useEffect(() => {
+    console.log("setData to storage");
+    const setData = async () => {
+      try {
+        await AsyncStorage.setItem("@books", JSON.stringify(bookShelfBooks));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    bookShelfBooks.length && setData();
+  }, [bookShelfBooks]);
+
+  // when this page first loads, we try to get Data from localstorage
+  useEffect(() => {
+    console.log("getData form storage");
+    const getData = async () => {
+      try {
+        const data = await AsyncStorage.getItem("@books");
+        data !== null ? dispatch(retrieveBooks(JSON.parse(data))) : null;
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getData();
+  }, []);
 
   const renderItem: ListRenderItem<BookshelfItem> = ({ item, index }) => (
     <BookshelfBookCard
