@@ -4,7 +4,12 @@ import { View, FlatList, ListRenderItem, Alert } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import { selectBooks } from "../../redux/store";
-import { remove, moveDown, moveUp } from "../../redux/slices/bookshelfSlice";
+import {
+  remove,
+  moveDown,
+  moveUp,
+  changeProgress,
+} from "../../redux/slices/bookshelfSlice";
 
 import BookshelfBookCard from "../../components/BookshelfBookCard";
 
@@ -45,7 +50,7 @@ export default function Bookshelf() {
         dispatch(moveDown(item.id));
       }}
       onMoveUp={() => dispatch(moveUp(item.id))}
-      onChangeProgress={() => null}
+      onChangeProgress={() => dispatch(changeProgress(item.id))}
     />
   );
 

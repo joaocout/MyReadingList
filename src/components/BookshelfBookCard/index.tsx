@@ -36,7 +36,12 @@ export default function BookshelfBookCard({
   const { width } = useWindowDimensions();
 
   return (
-    <View style={[styles.container]}>
+    <View
+      style={[
+        styles.container,
+        book.progress === "completed" ? { opacity: 0.25 } : null,
+      ]}
+    >
       <View style={styles.bookInfoContainer}>
         <Image
           source={{ uri: book.thumb }}
@@ -74,6 +79,26 @@ export default function BookshelfBookCard({
             color={isLast ? COLORS.LIGHTGRAY : COLORS.ACCENT}
           />
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={{ flexDirection: "row", alignItems: "center" }}
+          onPress={onChangeProgress}
+        >
+          <Ionicons
+            name={book.progress === "new" ? "book-outline" : "book"}
+            size={22}
+            color={COLORS.ACCENT}
+            style={{ marginRight: 5 }}
+          />
+          <Text style={{ color: COLORS.ACCENT, fontSize: 12 }}>
+            {book.progress === "new"
+              ? "want to read it!"
+              : book.progress === "reading"
+              ? "reading..."
+              : "finsished!"}
+          </Text>
+        </TouchableOpacity>
+
         {/* if this is the first element, it shouldn't be able to move up */}
         <TouchableOpacity disabled={isFirst} onPress={onMoveUp}>
           <Ionicons

@@ -46,10 +46,31 @@ const bookshelfSlice = createSlice({
 
       state.books = newBooks;
     },
+    changeProgress: (
+      state: bookshelfSliceState,
+      action: PayloadAction<string>
+    ) => {
+      // it always goes to the next state
+      // new -> reading -> completed
+
+      // index of the book to change progress
+      const index = state.books.findIndex(({ id }) => id === action.payload);
+
+      const progress = state.books[index].progress;
+
+      if (progress == "new") {
+        state.books[index].progress = "reading";
+      } else if (progress == "reading") {
+        state.books[index].progress = "completed";
+      } else if (progress == "completed") {
+        state.books[index].progress = "new";
+      }
+    },
   },
 });
 
-export const { add, remove, moveUp, moveDown } = bookshelfSlice.actions;
+export const { add, remove, moveUp, moveDown, changeProgress } =
+  bookshelfSlice.actions;
 
 const bookshelfReducer = bookshelfSlice.reducer;
 

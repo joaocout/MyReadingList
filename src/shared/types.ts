@@ -11,5 +11,5 @@ export type BookshelfItem = {
   title: string;
   authors: string;
   thumb: string;
-  progress: "complete" | "reading" | "new";
+  progress: "completed" | "reading" | "new";
 };

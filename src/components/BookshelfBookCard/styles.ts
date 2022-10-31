@@ -5,6 +5,7 @@ import { COLORS } from "../../shared/constants";
 export const styles = StyleSheet.create({
   container: {
     padding: 10,
+    paddingHorizontal: 25,
     borderColor: COLORS.WHITESMOKE,
     borderWidth: 1,
     borderRadius: 10,
@@ -46,5 +47,6 @@ export const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: "row",
     marginTop: 10,
+    justifyContent: "space-evenly",
   },
 });
