@@ -13,4 +13,17 @@ export const styles = StyleSheet.create({
     padding: 10,
     paddingVertical: 20,
   },
+
+  emptyBookshelfContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: COLORS.WHITE,
+    paddingHorizontal: 20,
+  },
+
+  emptyBookshelfText: {
+    color: COLORS.GRAY,
+    textAlign: "center",
+  },
 });

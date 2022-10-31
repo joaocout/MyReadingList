@@ -149,7 +149,7 @@ export default function Catalog() {
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={COLORS.ACCENT} />
         </View>
-      ) : (
+      ) : books.length ? (
         <FlatList
           numColumns={2}
           contentContainerStyle={styles.listContentContainer}
@@ -158,6 +158,13 @@ export default function Catalog() {
           renderItem={renderItem}
           ListFooterComponent={listFooter}
         />
+      ) : (
+        <View style={styles.emptyBookListContainer}>
+          <Text style={styles.emptyBookListText}>It's so empty here...</Text>
+          <Text style={styles.emptyBookListText}>
+            Use the search bar above and search for some books you like!
+          </Text>
+        </View>
       )}
     </View>
   );

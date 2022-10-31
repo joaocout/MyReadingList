@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, FlatList, ListRenderItem, Alert } from "react-native";
+import { View, FlatList, ListRenderItem, Alert, Text } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,7 +45,6 @@ export default function Bookshelf() {
       try {
         const data = await AsyncStorage.getItem("@books");
         data !== null ? dispatch(retrieveBooks(JSON.parse(data))) : null;
-        console.log(data);
       } catch (error) {
         console.log(error);
       }
@@ -86,11 +85,20 @@ export default function Bookshelf() {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={bookShelfBooks}
-        renderItem={renderItem}
-        contentContainerStyle={styles.listContentContainer}
-      />
+      {bookShelfBooks.length ? (
+        <FlatList
+          data={bookShelfBooks}
+          renderItem={renderItem}
+          contentContainerStyle={styles.listContentContainer}
+        />
+      ) : (
+        <View style={styles.emptyBookshelfContainer}>
+          <Text style={styles.emptyBookshelfText}>It's so empty here...</Text>
+          <Text style={styles.emptyBookshelfText}>
+            Go to the Search page and add some books to your bookshelf!
+          </Text>
+        </View>
+      )}
     </View>
   );
 }

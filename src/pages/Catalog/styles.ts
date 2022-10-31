@@ -44,4 +44,16 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     color: COLORS.GRAY,
   },
+
+  emptyBookListContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+
+  emptyBookListText: {
+    color: COLORS.GRAY,
+    textAlign: "center",
+  },
 });
