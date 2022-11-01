@@ -32,13 +32,17 @@ export const styles = StyleSheet.create({
     color: COLORS.GRAY,
   },
 
-  removeButton: {
+  sideContainerButton: {
     alignItems: "center",
     marginTop: 5,
     flexDirection: "row",
   },
 
-  removeButtonText: {
+  sideContainerButtonImg: {
+    marginRight: 5,
+  },
+
+  sideContainerButtonText: {
     color: COLORS.ACCENT,
     fontSize: 14,
     flexShrink: 1,

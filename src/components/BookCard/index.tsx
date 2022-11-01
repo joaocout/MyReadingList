@@ -42,7 +42,6 @@ export default function BookCard({
           styles.img,
           // width is calculated here, inside the component
           { width: width / 3 },
-          // if there's no thumbnail available, a lightgray rectangle should be displayed
         ]}
         source={{ uri: bookInfo.thumb }}
       />
@@ -57,6 +56,7 @@ export default function BookCard({
           <TouchableOpacity
             style={styles.buttonAddToShelf}
             onPress={() => {
+              // this button behaves differently if the book is already added to the shelf
               const message = alreadyInBookShelf
                 ? onRemoveMessage
                 : onAddMessage;

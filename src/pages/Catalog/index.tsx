@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
-  ActivityIndicator,
   FlatList,
   ListRenderItem,
   Text,
@@ -15,7 +14,9 @@ import { getBooks } from "../../api";
 import { selectBooks } from "../../redux/store";
 import { add, remove } from "../../redux/slices/bookshelfSlice";
 
+import Loading from "../../components/Loading";
 import BookCard from "../../components/BookCard";
+import EmptyListMessage from "../../components/EmptyListMessage";
 import SearchBar from "../../components/SearchBar";
 
 import { COLORS } from "../../shared/constants";
@@ -146,9 +147,7 @@ export default function Catalog() {
       ) : null}
 
       {loading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={COLORS.ACCENT} />
-        </View>
+        <Loading />
       ) : books.length ? (
         <FlatList
           numColumns={2}
@@ -159,12 +158,8 @@ export default function Catalog() {
           ListFooterComponent={listFooter}
         />
       ) : (
-        <View style={styles.emptyBookListContainer}>
-          <Text style={styles.emptyBookListText}>It's so empty here...</Text>
-          <Text style={styles.emptyBookListText}>
-            Use the search bar above and search for some books you like!
-          </Text>
-        </View>
+        // if no items are beign shown, we suggest the user to search for something
+        <EmptyListMessage message="Use the search bar above to search for some books you like!" />
       )}
     </View>
   );

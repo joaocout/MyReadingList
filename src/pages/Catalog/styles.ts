@@ -8,13 +8,6 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
   },
 
-  loadingContainer: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
   currentSearchText: {
     color: COLORS.GRAY,
     marginHorizontal: 20,
@@ -43,17 +36,5 @@ export const styles = StyleSheet.create({
   paginationCurrentText: {
     textAlign: "center",
     color: COLORS.GRAY,
-  },
-
-  emptyBookListContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20,
-  },
-
-  emptyBookListText: {
-    color: COLORS.GRAY,
-    textAlign: "center",
   },
 });

@@ -10,14 +10,17 @@ import {
   moveDown,
   moveUp,
   changeProgress,
-  retrieveBooks,
+  setBooks,
 } from "../../redux/slices/bookshelfSlice";
 
+import { getBooksFromStorage, setBooksInStorage } from "../../storage";
 import BookshelfBookCard from "../../components/BookshelfBookCard";
 
 import { styles } from "./styles";
 
 import type { BookshelfItem } from "../../shared/types";
+import EmptyListMessage from "../../components/EmptyListMessage";
+import Loading from "../../components/Loading";
 
 export default function Bookshelf() {
   const bookShelfBooks = useSelector(selectBooks);
@@ -25,29 +28,23 @@ export default function Bookshelf() {
 
   const [loading, setLoading] = useState(true);
 
-  // when we update the redux state, we also want to update the localstorage
+  // when we update the global state, we also want to update the localstorage
   useEffect(() => {
-    console.log("setData to storage");
     const setData = async () => {
-      try {
-        await AsyncStorage.setItem("@books", JSON.stringify(bookShelfBooks));
-      } catch (error) {
-        console.log(error);
-      }
+      const { error } = await setBooksInStorage(bookShelfBooks);
     };
+
     bookShelfBooks.length && setData();
   }, [bookShelfBooks]);
 
-  // when this page first loads, we try to get Data from localstorage
+  // when this page first loads, we try to copy the data from localstorage to the global state
   useEffect(() => {
-    console.log("getData form storage");
     const getData = async () => {
-      try {
-        const data = await AsyncStorage.getItem("@books");
-        data !== null ? dispatch(retrieveBooks(JSON.parse(data))) : null;
-      } catch (error) {
-        console.log(error);
-      }
+      const { data, error } = await getBooksFromStorage();
+
+      !error && dispatch(setBooks(data));
+
+      setLoading(false);
     };
     getData();
   }, []);
@@ -85,19 +82,16 @@ export default function Bookshelf() {
 
   return (
     <View style={styles.container}>
-      {bookShelfBooks.length ? (
+      {loading ? (
+        <Loading />
+      ) : bookShelfBooks.length ? (
         <FlatList
           data={bookShelfBooks}
           renderItem={renderItem}
           contentContainerStyle={styles.listContentContainer}
         />
       ) : (
-        <View style={styles.emptyBookshelfContainer}>
-          <Text style={styles.emptyBookshelfText}>It's so empty here...</Text>
-          <Text style={styles.emptyBookshelfText}>
-            Go to the Search page and add some books to your bookshelf!
-          </Text>
-        </View>
+        <EmptyListMessage message="Go to the Search page using the search icon below and add some books to your bookshelf!" />
       )}
     </View>
   );

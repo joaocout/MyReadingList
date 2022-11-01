@@ -14,7 +14,7 @@ const bookshelfSlice = createSlice({
   name: "bookShelf",
   initialState,
   reducers: {
-    retrieveBooks: (
+    setBooks: (
       state: bookshelfSliceState,
       action: PayloadAction<BookshelfItem[]>
     ) => {
@@ -75,7 +75,7 @@ const bookshelfSlice = createSlice({
   },
 });
 
-export const { add, remove, moveUp, moveDown, changeProgress, retrieveBooks } =
+export const { add, remove, moveUp, moveDown, changeProgress, setBooks } =
   bookshelfSlice.actions;
 
 const bookshelfReducer = bookshelfSlice.reducer;

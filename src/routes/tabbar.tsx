@@ -18,7 +18,7 @@ export default function Tabs() {
           <Ionicons
             name={route.name === "Catalog" ? "search" : "md-list"}
             size={22}
-            color={focused ? COLORS.ACCENT : COLORS.LIGHTGRAY}
+            color={focused ? COLORS.ACCENT : COLORS.GRAY}
           />
         ),
         tabBarLabel: () => null,

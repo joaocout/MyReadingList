@@ -4,6 +4,10 @@ import { View, Modal } from "react-native";
 
 type BookDetailsModalProps = {};
 
-export default function BookDetailsModal() {
-  return <Modal></Modal>;
+export default function BookDetailsModal({}: BookDetailsModalProps) {
+  return (
+    <Modal>
+      <View />
+    </Modal>
+  );
 }

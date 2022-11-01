@@ -7,6 +7,7 @@ export type SearchItem = {
   link: string;
 };
 
+// item added to the bookshelf
 export type BookshelfItem = {
   id: string;
   title: string;

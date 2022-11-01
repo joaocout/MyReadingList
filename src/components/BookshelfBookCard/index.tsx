@@ -56,26 +56,31 @@ export default function BookshelfBookCard({
         <View style={styles.sideContainer}>
           <Text style={styles.title}>{book.title}</Text>
           <Text style={styles.authors}>{book.authors}</Text>
-          <TouchableOpacity style={styles.removeButton} onPress={onRemove}>
+          <TouchableOpacity
+            style={styles.sideContainerButton}
+            onPress={onRemove}
+          >
             <Ionicons
               name="remove-circle-outline"
               size={22}
               color={COLORS.ACCENT}
-              style={{ marginRight: 5 }}
+              style={styles.sideContainerButtonImg}
             />
-            <Text style={styles.removeButtonText}>remove from bookshelf</Text>
+            <Text style={styles.sideContainerButtonText}>
+              remove from bookshelf
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.removeButton}
+            style={styles.sideContainerButton}
             onPress={() => Linking.openURL(book.link)}
           >
             <Ionicons
-              style={{ marginRight: 5 }}
+              style={styles.sideContainerButtonImg}
               name="logo-google"
               size={22}
               color={COLORS.ACCENT}
             />
-            <Text style={styles.removeButtonText}>see it on Google</Text>
+            <Text style={styles.sideContainerButtonText}>see it on Google</Text>
           </TouchableOpacity>
         </View>
       </View>
