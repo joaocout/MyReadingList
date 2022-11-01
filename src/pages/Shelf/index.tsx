@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, FlatList, ListRenderItem, Alert, Text } from "react-native";
+import { View, FlatList, ListRenderItem, Alert } from "react-native";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 
 import { selectBooks } from "../../redux/store";
@@ -12,15 +11,16 @@ import {
   changeProgress,
   setBooks,
 } from "../../redux/slices/bookshelfSlice";
-
 import { getBooksFromStorage, setBooksInStorage } from "../../storage";
+
+import ToastError from "../../components/ToastError";
 import BookshelfBookCard from "../../components/BookshelfBookCard";
+import EmptyListMessage from "../../components/EmptyListMessage";
+import Loading from "../../components/Loading";
 
 import { styles } from "./styles";
 
 import type { BookshelfItem } from "../../shared/types";
-import EmptyListMessage from "../../components/EmptyListMessage";
-import Loading from "../../components/Loading";
 
 export default function Bookshelf() {
   const bookShelfBooks = useSelector(selectBooks);
@@ -32,6 +32,7 @@ export default function Bookshelf() {
   useEffect(() => {
     const setData = async () => {
       const { error } = await setBooksInStorage(bookShelfBooks);
+      error && ToastError();
     };
 
     bookShelfBooks.length && setData();
@@ -43,6 +44,7 @@ export default function Bookshelf() {
       const { data, error } = await getBooksFromStorage();
 
       !error && dispatch(setBooks(data));
+      error && ToastError();
 
       setLoading(false);
     };

@@ -24,7 +24,6 @@ export default function SearchBar({
     // if the query is empty, we should throw an error an let the user know
     if (value.replace(" ", "") === "") {
       Toast.show(submitErrorMessage, {
-        duration: Toast.durations.LONG,
         position: Toast.positions.CENTER,
         hideOnPress: true,
       });

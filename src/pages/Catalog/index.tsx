@@ -14,6 +14,7 @@ import { getBooks } from "../../api";
 import { selectBooks } from "../../redux/store";
 import { add, remove } from "../../redux/slices/bookshelfSlice";
 
+import ToastError from "../../components/ToastError";
 import Loading from "../../components/Loading";
 import BookCard from "../../components/BookCard";
 import EmptyListMessage from "../../components/EmptyListMessage";
@@ -51,6 +52,9 @@ export default function Catalog() {
       totalPages: totalPagesValue,
       error,
     } = await getBooks(query, page);
+
+    error && ToastError();
+
     setBooks(books);
     setTotalPages(totalPagesValue);
     setLoading(false);
