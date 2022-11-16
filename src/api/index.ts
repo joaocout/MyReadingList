@@ -23,7 +23,6 @@ type GetBooksResult = {
 };
 
 async function getBooks(query: string, page: number): Promise<GetBooksResult> {
-  console.log("getting books");
   try {
     const { data } = await axios.get(
       `https://www.googleapis.com/books/v1/volumes?q=${query.replace(
