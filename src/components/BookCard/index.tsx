@@ -13,10 +13,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../shared/constants";
 import { styles } from "./styles";
 
-import type { SearchItem } from "../../shared/types";
+import type { Book } from "../../shared/types";
 
 type BookCardProps = {
-  bookInfo: SearchItem;
+  book: Book;
   onAdd: () => void;
   onAddMessage: string;
   onMoreInfo: (id: string) => void;
@@ -26,7 +26,7 @@ type BookCardProps = {
 };
 
 export default function BookCard({
-  bookInfo,
+  book,
   onAdd,
   onAddMessage,
   onRemove,
@@ -43,13 +43,13 @@ export default function BookCard({
           // width is calculated here, inside the component
           { width: width / 3 },
         ]}
-        source={{ uri: bookInfo.thumb }}
+        source={{ uri: book.coverLink }}
       />
       <View style={styles.infoContainer}>
         <View style={styles.infoTextContainer}>
-          <Text style={styles.title}>{bookInfo.title}</Text>
-          {bookInfo.authors ? (
-            <Text style={styles.authors}>{bookInfo.authors}</Text>
+          <Text style={styles.title}>{book.title}</Text>
+          {book.authors ? (
+            <Text style={styles.authors}>{book.authors}</Text>
           ) : null}
         </View>
         <View style={styles.infoButtonsContainer}>

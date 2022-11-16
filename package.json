@@ -1,7 +1,6 @@
 {
   "name": "ploomeschallengeapp",
   "version": "1.0.0",
-  "main": "src",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -20,6 +19,7 @@
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-native": "0.69.6",
+    "react-native-reanimated": "~2.9.1",
     "react-native-root-toast": "^3.4.0",
     "react-native-safe-area-context": "4.3.1",
     "react-native-screens": "~3.15.0",

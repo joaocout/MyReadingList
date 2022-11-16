@@ -1,11 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import type { BookshelfItem } from "../shared/types";
+import type { Book } from "../shared/types";
 
 const KEY = "@books";
 
 type getBooksFromStorageResponse = {
-  data: BookshelfItem[];
+  data: Book[];
   error: boolean;
 };
 
@@ -24,7 +24,7 @@ type setBooksInStorageResponse = {
 };
 
 async function setBooksInStorage(
-  books: BookshelfItem[]
+  books: Book[]
 ): Promise<setBooksInStorageResponse> {
   try {
     await AsyncStorage.setItem(KEY, JSON.stringify(books));

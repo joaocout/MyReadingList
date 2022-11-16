@@ -1,20 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  View,
-  FlatList,
-  ListRenderItem,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import React, { useState } from "react";
+import { View, ListRenderItem, Text, TouchableOpacity } from "react-native";
 
+import Animated from "react-native-reanimated";
 import { useSelector, useDispatch } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 
-import { getBooks } from "../../api";
+import { useToastError } from "../../hooks/useToastError";
+import { useListMountingAnimation } from "../../hooks/useListMountingAnimation";
+import { useSearchBooks } from "../../hooks/useSearchBooks";
 import { selectBooks } from "../../redux/store";
 import { add, remove } from "../../redux/slices/bookshelfSlice";
 
-import ToastError from "../../components/ToastError";
 import Loading from "../../components/Loading";
 import BookCard from "../../components/BookCard";
 import EmptyListMessage from "../../components/EmptyListMessage";
@@ -23,42 +19,21 @@ import SearchBar from "../../components/SearchBar";
 import { COLORS } from "../../shared/constants";
 import { styles } from "./styles";
 
-import type { SearchItem } from "../../shared/types";
+import type { Book } from "../../shared/types";
 
 export default function Catalog() {
   const bookshelfBooks = useSelector(selectBooks);
   const dispatch = useDispatch();
 
-  const [loading, setLoading] = useState(false);
-
-  const [lastQuery, setLastQuery] = useState("");
   const [query, onChangeQuery] = useState("");
-
-  const [books, setBooks] = useState<Array<SearchItem>>([]);
   const [pageIndex, setPageIndex] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
 
-  // whenever the page changes, we want to rerun getData to update data
-  useEffect(() => {
-    if (query.length && totalPages) {
-      getData(lastQuery, pageIndex);
-    }
-  }, [pageIndex]);
+  const { books, loading, totalPages, error, lastSearchedQuery, searchBooks } =
+    useSearchBooks(query, pageIndex);
 
-  const getData = useCallback(async (query: string, page: number) => {
-    setLoading(true);
-    const {
-      books,
-      totalPages: totalPagesValue,
-      error,
-    } = await getBooks(query, page);
+  const animatedStyle = useListMountingAnimation(loading);
 
-    error && ToastError();
-
-    setBooks(books);
-    setTotalPages(totalPagesValue);
-    setLoading(false);
-  }, []);
+  useToastError(error);
 
   const listFooter = () => {
     // if we are at the first page, the back button should appear disabled
@@ -70,61 +45,47 @@ export default function Catalog() {
       pageIndex >= totalPages ? COLORS.LIGHTGRAY : COLORS.ACCENT;
 
     return (
-      // if there are no books loaded, we don't need to render the pagination buttons
-      books.length ? (
-        <View style={styles.listFooterContainer}>
-          <TouchableOpacity
-            onPress={() => setPageIndex((prev) => prev - 1)}
-            disabled={pageIndex === 0}
-            style={styles.paginationButtonContainer}
-          >
-            <Text style={{ color: prevPageButtonColor }}>Previous</Text>
-            <Ionicons
-              name="chevron-back-circle"
-              size={34}
-              color={prevPageButtonColor}
-            />
-          </TouchableOpacity>
-          <View style={styles.paginationButtonContainer}>
-            <Text style={styles.paginationCurrentText}>
-              Page {pageIndex + 1}
-            </Text>
-          </View>
-          <TouchableOpacity
-            disabled={pageIndex === totalPages}
-            onPress={() => setPageIndex((prev) => prev + 1)}
-            style={styles.paginationButtonContainer}
-          >
-            <Text style={{ color: nextPageButtonColor }}>Next</Text>
-            <Ionicons
-              name="chevron-forward-circle"
-              size={34}
-              color={nextPageButtonColor}
-            />
-          </TouchableOpacity>
+      <View style={styles.listFooterContainer}>
+        <TouchableOpacity
+          onPress={() => setPageIndex((prev) => prev - 1)}
+          disabled={pageIndex === 0}
+          style={styles.paginationButtonContainer}
+        >
+          <Text style={{ color: prevPageButtonColor }}>Previous</Text>
+          <Ionicons
+            name="chevron-back-circle"
+            size={34}
+            color={prevPageButtonColor}
+          />
+        </TouchableOpacity>
+        <View style={styles.paginationButtonContainer}>
+          <Text style={styles.paginationCurrentText}>Page {pageIndex + 1}</Text>
         </View>
-      ) : null
+        <TouchableOpacity
+          disabled={pageIndex === totalPages}
+          onPress={() => setPageIndex((prev) => prev + 1)}
+          style={styles.paginationButtonContainer}
+        >
+          <Text style={{ color: nextPageButtonColor }}>Next</Text>
+          <Ionicons
+            name="chevron-forward-circle"
+            size={34}
+            color={nextPageButtonColor}
+          />
+        </TouchableOpacity>
+      </View>
     );
   };
 
-  const renderItem: ListRenderItem<SearchItem> = ({ item }) => (
+  const renderItem: ListRenderItem<Book> = ({ item }) => (
     <BookCard
       alreadyInBookShelf={
         bookshelfBooks.findIndex((book) => book.id === item.id) !== -1
       }
-      bookInfo={item}
+      book={item}
       onMoreInfo={() => null}
       onAdd={() => {
-        dispatch(
-          add({
-            id: item.id,
-            title: item.title,
-            thumb: item.thumb,
-            authors: item.authors,
-            progress: "new",
-            link: item.link,
-          })
-        );
+        dispatch(add(item));
       }}
       onAddMessage={`${item.title} added to your Bookshelf!`}
       onRemove={() => dispatch(remove(item.id))}
@@ -137,23 +98,24 @@ export default function Catalog() {
       <SearchBar
         value={query}
         onChangeText={onChangeQuery}
-        onSubmitSuccess={(text) => {
+        onSubmitSuccess={() => {
           // we call getData with page 0 because we are doing a new query
-          getData(text, 0);
-          setPageIndex(0);
-          setLastQuery(query);
+          searchBooks();
         }}
         submitErrorMessage={"Cannot search for empty text!"}
       />
 
-      {lastQuery.length ? (
-        <Text style={styles.currentSearchText}>Searching for: {lastQuery}</Text>
+      {lastSearchedQuery.length ? (
+        <Text style={styles.currentSearchText}>
+          Searching for: {lastSearchedQuery}
+        </Text>
       ) : null}
 
       {loading ? (
         <Loading />
       ) : books.length ? (
-        <FlatList
+        <Animated.FlatList
+          style={animatedStyle}
           numColumns={2}
           contentContainerStyle={styles.listContentContainer}
           data={books}

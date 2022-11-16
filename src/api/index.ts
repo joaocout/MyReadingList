@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import type { SearchItem } from "../shared/types";
+import type { Book } from "../shared/types";
 
 // json from the api
 type SearchResponseItem = {
@@ -17,12 +17,13 @@ type SearchResponseItem = {
 
 // return type of the 'getBooks' function
 type GetBooksResult = {
-  books: SearchItem[];
+  books: Book[];
   totalPages: number;
   error: boolean;
 };
 
 async function getBooks(query: string, page: number): Promise<GetBooksResult> {
+  console.log("getting books");
   try {
     const { data } = await axios.get(
       `https://www.googleapis.com/books/v1/volumes?q=${query.replace(
@@ -30,14 +31,16 @@ async function getBooks(query: string, page: number): Promise<GetBooksResult> {
         "+"
       )}&projection=lite&maxResults=6&startIndex=${page * 6}`
     );
-    const result: Array<SearchItem> = data.items.map(
-      (book: SearchResponseItem) => ({
-        id: book.id,
-        title: book.volumeInfo.title,
-        authors: book.volumeInfo.authors?.join("\n"),
-        thumb: book.volumeInfo.imageLinks?.thumbnail,
-        link: book.volumeInfo.canonicalVolumeLink,
-      })
+    const result: Array<Book> = data.items.map(
+      (book: SearchResponseItem) =>
+        ({
+          id: book.id,
+          title: book.volumeInfo.title,
+          authors: book.volumeInfo.authors?.join("\n"),
+          coverLink: book.volumeInfo.imageLinks?.thumbnail,
+          googleLink: book.volumeInfo.canonicalVolumeLink,
+          progress: "new",
+        } as Book)
     );
     return {
       books: result,

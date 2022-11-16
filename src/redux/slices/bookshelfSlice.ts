@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import type { BookshelfItem } from "../../shared/types";
+import type { Book } from "../../shared/types";
 
 type bookshelfSliceState = {
-  books: Array<BookshelfItem>;
+  books: Array<Book>;
 };
 
 const initialState: bookshelfSliceState = {
@@ -14,13 +14,10 @@ const bookshelfSlice = createSlice({
   name: "bookShelf",
   initialState,
   reducers: {
-    setBooks: (
-      state: bookshelfSliceState,
-      action: PayloadAction<BookshelfItem[]>
-    ) => {
+    setBooks: (state: bookshelfSliceState, action: PayloadAction<Book[]>) => {
       state.books = action.payload;
     },
-    add: (state: bookshelfSliceState, action: PayloadAction<BookshelfItem>) => {
+    add: (state: bookshelfSliceState, action: PayloadAction<Book>) => {
       // index of the book to move
       const index = state.books.findIndex(({ id }) => id === action.payload.id);
 

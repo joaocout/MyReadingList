@@ -8,17 +8,18 @@ import {
   Linking,
 } from "react-native";
 
+import Animated, { FadeOutRight, Layout } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 
 import { COLORS } from "../../shared/constants";
 import { styles } from "./styles";
 
-import type { BookshelfItem } from "../../shared/types";
+import type { Book } from "../../shared/types";
 
 type BookshelfBookCardProps = {
   isLast: boolean;
   isFirst: boolean;
-  book: BookshelfItem;
+  book: Book;
   onRemove: () => void;
   onChangeProgress: () => void;
   onMoveUp: () => void;
@@ -37,7 +38,9 @@ export default function BookshelfBookCard({
   const { width } = useWindowDimensions();
 
   return (
-    <View
+    <Animated.View
+      layout={Layout.delay(100)}
+      exiting={FadeOutRight}
       style={[
         styles.container,
         // when the book is marked as finished, its card will appear faded
@@ -46,7 +49,7 @@ export default function BookshelfBookCard({
     >
       <View style={styles.bookInfoContainer}>
         <Image
-          source={{ uri: book.thumb }}
+          source={{ uri: book.coverLink }}
           style={{
             backgroundColor: COLORS.WHITESMOKE,
             aspectRatio: 128 / 184,
@@ -72,7 +75,7 @@ export default function BookshelfBookCard({
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.sideContainerButton}
-            onPress={() => Linking.openURL(book.link)}
+            onPress={() => Linking.openURL(book.googleLink)}
           >
             <Ionicons
               style={styles.sideContainerButtonImg}
@@ -131,6 +134,6 @@ export default function BookshelfBookCard({
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </Animated.View>
   );
 }

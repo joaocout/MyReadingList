@@ -1,78 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { View, FlatList, ListRenderItem, Alert } from "react-native";
+import React from "react";
+import { View } from "react-native";
 
-import { useDispatch, useSelector } from "react-redux";
+import Animated from "react-native-reanimated";
+import { useDispatch } from "react-redux";
 
-import { selectBooks } from "../../redux/store";
+import { useToastError } from "../../hooks/useToastError";
+import { useListMountingAnimation } from "../../hooks/useListMountingAnimation";
+import { useStorageBooks } from "../../hooks/useStorageBooks";
 import {
   remove,
   moveDown,
   moveUp,
   changeProgress,
-  setBooks,
 } from "../../redux/slices/bookshelfSlice";
-import { getBooksFromStorage, setBooksInStorage } from "../../storage";
 
-import ToastError from "../../components/ToastError";
 import BookshelfBookCard from "../../components/BookshelfBookCard";
 import EmptyListMessage from "../../components/EmptyListMessage";
 import Loading from "../../components/Loading";
 
 import { styles } from "./styles";
 
-import type { BookshelfItem } from "../../shared/types";
+import type { Book } from "../../shared/types";
 
 export default function Bookshelf() {
-  const bookShelfBooks = useSelector(selectBooks);
   const dispatch = useDispatch();
 
-  const [loading, setLoading] = useState(true);
+  const { books, loading, error } = useStorageBooks();
 
-  // when we update the global state, we also want to update the localstorage
-  useEffect(() => {
-    const setData = async () => {
-      const { error } = await setBooksInStorage(bookShelfBooks);
-      error && ToastError();
-    };
+  const animatedStyle = useListMountingAnimation(loading);
 
-    bookShelfBooks.length && setData();
-  }, [bookShelfBooks]);
+  useToastError(error);
 
-  // when this page first loads, we try to copy the data from localstorage to the global state
-  useEffect(() => {
-    const getData = async () => {
-      const { data, error } = await getBooksFromStorage();
-
-      !error && dispatch(setBooks(data));
-      error && ToastError();
-
-      setLoading(false);
-    };
-    getData();
-  }, []);
-
-  const renderItem: ListRenderItem<BookshelfItem> = ({ item, index }) => (
+  const renderItem = ({ item, index }: { item: Book; index: number }) => (
     <BookshelfBookCard
-      isLast={index === bookShelfBooks.length - 1}
+      key={item.id}
+      isLast={index === books.length - 1}
       isFirst={index === 0}
       book={item}
       onRemove={() => {
-        Alert.alert(
-          "Removing book from bookshelf",
-          `Are you sure you want to remove ${item.title} from your bookshelf?`,
-          [
-            {
-              text: "Cancel",
-              style: "cancel",
-            },
-            {
-              text: "I'm sure",
-              onPress: () => {
-                dispatch(remove(item.id));
-              },
-            },
-          ]
-        );
+        dispatch(remove(item.id));
       }}
       onMoveDown={() => {
         dispatch(moveDown(item.id));
@@ -86,12 +52,13 @@ export default function Bookshelf() {
     <View style={styles.container}>
       {loading ? (
         <Loading />
-      ) : bookShelfBooks.length ? (
-        <FlatList
-          data={bookShelfBooks}
-          renderItem={renderItem}
+      ) : books.length ? (
+        <Animated.ScrollView
+          style={animatedStyle}
           contentContainerStyle={styles.listContentContainer}
-        />
+        >
+          {books.map((item, index) => renderItem({ item, index }))}
+        </Animated.ScrollView>
       ) : (
         <EmptyListMessage message="Go to the Search page using the search icon below and add some books to your bookshelf!" />
       )}
