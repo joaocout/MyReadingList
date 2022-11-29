@@ -1,4 +1,4 @@
-# PloomesChallengeApp
+# MyReadingList
 
 A proposta do aplicativo é prover uma forma de organizar uma lista de leitura, com possibilidade de buscar livros (utilizando a api do Google - _Google Books API_), e adicioná-los a sua estante pessoal.
 
